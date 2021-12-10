@@ -1,0 +1,30 @@
+.container {
+  margin: 30px 0 10px 0;
+}
+
+.summaryText {
+  display: border-box;
+  padding: 10px 0 0 0;
+}
+
+.horizontalCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reasonsContainer {
+  padding-bottom: 10px;
+  border-bottom: 1px solid red;
+  margin-bottom: 30px;
+}
+
+.removeReason {
+  margin: 10px;
+  border-radius: 10px;
+  padding: 2px;
+}
+
+.removeReason:hover {
+  cursor: pointer;
+}
