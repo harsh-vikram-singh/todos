@@ -21,8 +21,8 @@ model User {
 
 model Todos {
   id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
   title String
   description String @db.VarChar(200)
   startDate String
