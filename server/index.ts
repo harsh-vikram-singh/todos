@@ -19,6 +19,23 @@ app.get('/health', (req, res) => {
   res.send('OK');
 });
 
+interface listQueryParams {
+  userId: string;
+}
+app.get('/list', async (req: Request<unknown, unknown, unknown, listQueryParams>, res: Response) => {
+  console.log('on route /list')
+  const id = parseInt(req.query.userId);
+  // let userIdNum = (typeof userId === 'string') ? parseInt(userId) : userId
+  const getUserTodos = await readUserTodos(id);
+  console.log('getUserTodos value: ', getUserTodos);
+  if (getUserTodos.status === 'success') {
+    res.status(200);
+    res.send({
+      userTodos: getUserTodos.payload
+    })
+  }
+})
+
 app.post('/todos/create', async (req: Request, res: Response) => {
   console.log('data received: ', req.body);
   const { firstReason, secondReason, thirdReason, firstSteps, secondSteps, thirdSteps } = req.body.roadblocks;

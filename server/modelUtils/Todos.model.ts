@@ -65,8 +65,9 @@ const updateTodo = async (todoData: Todos) => {
 };
 
 const readUserTodos = async (userId: number) => {
+  console.log('inside readUserTodos model, received userId: ', userId);
   try {
-    const todosData = prisma.todos.findMany({
+    const todosData = await prisma.todos.findMany({
       where: {
         userId: userId
       }

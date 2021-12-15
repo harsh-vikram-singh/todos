@@ -2,7 +2,7 @@ import React, {useState, ChangeEvent} from 'react';
 import TextAreaWithWordLimit from '../reuseable/textAreaWithWordLimit';
 import PossibleReasons from './possibleReasons';
 import { onSubmitHandler, onResetHandler } from './createTodoUtils';
-
+import axios from '../../axios';
 
 const CreateTodo = () => {
   const [title, setTitle] = useState('');
@@ -17,9 +17,14 @@ const CreateTodo = () => {
   });
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [isApiRequest, setIsApiRequest] = useState('waiting'); // loading | waiting
+  const [user, setUser] = useState({
+    email: 'singh.harshvikram@gmail.com',
+    id: 1
+  });
   
   const getFormValues = () => {
-    return { title, description, roadblocks, startDate, endDate }
+    return { title, description, roadblocks, startDate, endDate, userId: user.id}
   }
 
   // method to capture reasons change and store into the state
@@ -27,11 +32,19 @@ const CreateTodo = () => {
     setRoadblocks({...roadblocks, [e.target.id]: e.target.value});
   }
 
-  React.useEffect(
-    () => {
-      console.log('createTodo component got mounted');
-    }
-  )
+  React.useEffect(() => {
+    if (isApiRequest === 'loading') {
+      axios({
+        method: 'post',
+        data: getFormValues(),
+        url: '/todos/create'
+      })
+        .then(response => response.data)
+        .then(data => console.log('api response: ', data))
+        .then(() => setIsApiRequest('waiting'))
+        .catch(err => console.log('following error occured: ', err))
+      };
+    }, [isApiRequest])
 
   return (
     <div id='createTodoContainer'>
@@ -70,7 +83,10 @@ const CreateTodo = () => {
         </div>
         <PossibleReasons captureReasonsChange={captureResonsChange} />
         <div className='buttonsContainer'>
-          <button onClick={(e) => onSubmitHandler(e, getFormValues())}>Create</button>
+          <button onClick={(e) => {
+            setIsApiRequest('loading');
+            onSubmitHandler(e, getFormValues())
+          }}>Create</button>
           <button onClick={() => {setTitle(''); setDescription('')}}>Reset</button>
         </div>
       </form>
